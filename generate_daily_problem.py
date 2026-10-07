@@ -1,5 +1,10 @@
 import os
 import json
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 from google import genai
 from google.genai import types
 
@@ -30,16 +35,28 @@ def main():
     }}
     """
     
-    print("Calling Gemini API...")
-    response = client.models.generate_content(
-        model='gemini-3.1-flash',
-        contents='Give me my daily LeetCode problem.',
-        config=types.GenerateContentConfig(
-            system_instruction=system_instruction,
-            response_mime_type="application/json",
-            temperature=0.7
-        )
-    )
+    models_to_try = ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.6-flash']
+    response = None
+    
+    for model_name in models_to_try:
+        print(f"Calling Gemini API with {model_name}...")
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents='Give me my daily LeetCode problem.',
+                config=types.GenerateContentConfig(
+                    system_instruction=system_instruction,
+                    response_mime_type="application/json",
+                    temperature=0.7
+                )
+            )
+            print(f"Successfully generated with {model_name}!")
+            break  # Stop trying if successful
+        except Exception as e:
+            print(f"Failed with {model_name}: {e}")
+            
+    if not response:
+        raise RuntimeError("All models failed. Please try again later.")
     
     try:
         data = json.loads(response.text)
