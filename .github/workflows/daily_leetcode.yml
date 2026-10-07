@@ -4,6 +4,8 @@ on:
   schedule:
     # 2:00 AM UTC is 10:00 PM Eastern Daylight Time (EDT)
     - cron: '0 2 * * *'
+    # 1:30 PM UTC is 9:30 AM Eastern Daylight Time (EDT)
+    - cron: '30 13 * * *'
   push:
     branches:
       - main

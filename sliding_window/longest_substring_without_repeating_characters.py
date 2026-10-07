@@ -29,8 +29,20 @@ Constraints:
 
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        # TODO: Implement your solution here
-        pass
+        st = set()
+        l = 0
+        res = 0
+        for i, ch in enumerate(s):
+            if ch not in st:
+                res = max(res, i - l + 1)
+            else:
+                while ch in st and l < i:
+                    st.remove(s[l])
+                    l += 1
+            st.add(ch)
+            
+        return res
+                
 
 
 if __name__ == "__main__":
