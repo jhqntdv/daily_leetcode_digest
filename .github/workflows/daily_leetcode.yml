@@ -32,7 +32,14 @@ jobs:
       - name: Generate Problem
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python generate_daily_problem.py
+        run: |
+          TIMES=$(( ( RANDOM % 3 ) + 1 ))
+          echo "Generating $TIMES problems today..."
+          for i in $(seq 1 $TIMES); do
+            echo "Generating problem $i/$TIMES"
+            python generate_daily_problem.py
+            sleep 3 # Brief pause to avoid API rate limits
+          done
 
       - name: Commit and Push
         run: |
