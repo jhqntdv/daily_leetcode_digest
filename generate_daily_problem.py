@@ -74,7 +74,7 @@ def main():
 
     endpoints = []
     if api_key_1:
-        endpoints.append(("AI Studio", genai.Client(api_key=api_key_1), ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-3.5-flash']))
+        endpoints.append(("AI Studio", genai.Client(api_key=api_key_1), ['gemini-3.5-flash', 'gemini-3.6-flash', 'gemini-3.7-flash', 'gemini-3.8-flash']))
     if api_key_2:
         endpoints.append(("Vertex", genai.Client(vertexai=True, project=os.environ.get("GOOGLE_CLOUD_PROJECT"), location=os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1"), api_key=api_key_2), ['gemini-2.5-flash', 'gemini-2.5-flash-lite']))
 
