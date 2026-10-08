@@ -2,10 +2,12 @@ name: Generate Daily LeetCode
 
 on:
   schedule:
-    # 2:00 AM UTC is 10:00 PM Eastern Daylight Time (EDT)
-    - cron: '0 2 * * *'
-    # 1:30 PM UTC is 9:30 AM Eastern Daylight Time (EDT)
+    # 9:30 AM Eastern Time (13:30 UTC in EDT)
     - cron: '30 13 * * *'
+    # 5:00 PM Eastern Time (21:00 UTC in EDT)
+    - cron: '0 21 * * *'
+    # 10:00 PM Eastern Time (02:00 UTC next day in EDT)
+    - cron: '0 2 * * *'
   push:
     branches:
       - main
@@ -43,7 +45,7 @@ jobs:
           for i in $(seq 1 $TIMES); do
             echo "Generating problem $i/$TIMES"
             python generate_daily_problem.py
-            sleep 3 # Brief pause to avoid API rate limits
+            sleep 2 # Brief pause to avoid API rate limits
           done
 
       - name: Commit and Push
