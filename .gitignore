@@ -1,4 +1,28 @@
-.venv/
-__pycache__/
-*.pyc
+# Environment variables and secrets
 .env
+.env.*
+*.env
+service-account*.json
+*credentials*.json
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS temporary files
+.DS_Store
+Thumbs.db

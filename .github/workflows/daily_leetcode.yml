@@ -34,8 +34,11 @@ jobs:
       - name: Generate Problem
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY2: ${{ secrets.GEMINI_API_KEY2 }}
+          GOOGLE_CLOUD_PROJECT: ${{ vars.GOOGLE_CLOUD_PROJECT || secrets.GOOGLE_CLOUD_PROJECT}}
+          GOOGLE_CLOUD_LOCATION: ${{ vars.GOOGLE_CLOUD_LOCATION}}
         run: |
-          TIMES=$(( ( RANDOM % 3 ) + 1 ))
+          TIMES=$(( ( RANDOM % 2 ) + 1 ))
           echo "Generating $TIMES problems today..."
           for i in $(seq 1 $TIMES); do
             echo "Generating problem $i/$TIMES"
