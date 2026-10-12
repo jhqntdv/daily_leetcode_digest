@@ -3,21 +3,37 @@ from typing import List
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
         """
-        Given an array of distinct integers candidates and a target integer target,
-        return a list of all unique combinations of candidates where the chosen
-        numbers sum to target. You may return the combinations in any order.
+        Backtracking with Pruning:
+        1. Sort candidates in ascending order to enable early pruning.
+        2. In each step, if remaining target == 0, record the current combination.
+        3. If candidate > remain, break the loop immediately (pruning) because all
+           subsequent candidates are greater or equal.
+        4. Since an element can be chosen unlimited times, recurse starting at index `i`.
 
-        The same number may be chosen from candidates an unlimited number of times.
-        Two combinations are unique if the frequency of at least one of the chosen
-        numbers is different.
-
-        Constraints:
-        - 1 <= candidates.length <= 30
-        - 2 <= candidates[i] <= 40
-        - All elements of candidates are distinct.
-        - 1 <= target <= 40
+        Time Complexity: O(N^(T/M)) in the worst case, where N = len(candidates),
+                         T = target, and M = min(candidates). Pruning significantly reduces the state space.
+        Space Complexity: O(T/M) for the recursion call stack and current combination path.
         """
-        pass
+        candidates.sort()
+        res: List[List[int]] = []
+        path: List[int] = []
+
+        def backtrack(start_index: int, remain: int) -> None:
+            if remain == 0:
+                res.append(list(path))
+                return
+
+            for i in range(start_index, len(candidates)):
+                val = candidates[i]
+                if val > remain:
+                    break  # Pruning: all subsequent elements are >= val > remain
+
+                path.append(val)
+                backtrack(i, remain - val)  # Pass i because the same element can be reused
+                path.pop()
+
+        backtrack(0, target)
+        return res
 
 if __name__ == '__main__':
     sol = Solution()
