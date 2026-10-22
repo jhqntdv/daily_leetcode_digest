@@ -1,3 +1,4 @@
+from collections import deque
 from typing import List
 
 class Solution:
@@ -37,9 +38,46 @@ class Solution:
         - n == grid[i].length
         - 1 <= m, n <= 10
         - grid[i][j] is 0, 1, or 2.
+
+        Complexity:
+        Time Complexity: O(m * n) - each cell is visited at most once.
+        Space Complexity: O(m * n) - queue can hold all rotten cells in the worst case.
         """
-        # Write your solution here
-        pass
+        if not grid or not grid[0]:
+            return 0
+
+        rows, cols = len(grid), len(grid[0])
+        queue = deque()
+        fresh_count = 0
+
+        # Step 1: Collect all initial rotten oranges and count fresh oranges
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 2:
+                    queue.append((r, c))
+                elif grid[r][c] == 1:
+                    fresh_count += 1
+
+        # If there are no fresh oranges from the start, 0 minutes are needed
+        if fresh_count == 0:
+            return 0
+
+        minutes = 0
+        directions = ((-1, 0), (1, 0), (0, -1), (0, 1))
+
+        # Step 2: Multi-source BFS layer by layer (each layer = 1 minute)
+        while queue and fresh_count > 0:
+            for _ in range(len(queue)):
+                r, c = queue.popleft()
+                for dr, dc in directions:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                        grid[nr][nc] = 2
+                        fresh_count -= 1
+                        queue.append((nr, nc))
+            minutes += 1
+
+        return minutes if fresh_count == 0 else -1
 
 
 if __name__ == '__main__':

@@ -1,3 +1,4 @@
+from collections import deque
 from typing import List
 
 class Solution:
@@ -44,8 +45,38 @@ class Solution:
     - grid[i][j] is '0' or '1'.
     """
     def numIslands(self, grid: List[List[str]]) -> int:
-        # Write your code here
-        pass
+        """
+        BFS Flood Fill:
+        Iterate through every cell in the grid. When an unvisited land cell ('1') is encountered,
+        increment the island count and trigger a BFS to sink (mark as '0') all connected land cells.
+
+        Using BFS with a queue avoids Python's recursion depth limit on large grids (up to 300x300).
+
+        Time Complexity: O(m * n) where m and n are grid dimensions.
+        Space Complexity: O(min(m, n)) for the BFS queue in the worst case.
+        """
+        if not grid or not grid[0]:
+            return 0
+
+        rows, cols = len(grid), len(grid[0])
+        island_count = 0
+
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == "1":
+                    island_count += 1
+                    # Sink the island starting at (r, c)
+                    grid[r][c] = "0"
+                    queue = deque([(r, c)])
+                    while queue:
+                        curr_r, curr_c = queue.popleft()
+                        for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                            nr, nc = curr_r + dr, curr_c + dc
+                            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == "1":
+                                grid[nr][nc] = "0"  # Mark visited immediately upon enqueuing
+                                queue.append((nr, nc))
+
+        return island_count
 
 
 if __name__ == "__main__":

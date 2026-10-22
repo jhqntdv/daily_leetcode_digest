@@ -35,13 +35,43 @@ Constraints:
 - 0 <= a_i, b_i < numCourses
 - All pairs prerequisites[i] are unique.
 """
+from collections import deque
 from typing import List
 
 
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        # TODO: Implement your solution here
-        pass
+        """
+        Topological Sort using Kahn's Algorithm (BFS with In-degrees).
+
+        A prerequisite pair [a, b] indicates a directed edge from course b to course a (b -> a).
+        A course can be taken if all its prerequisites have been completed (in-degree == 0).
+        If we can process all `numCourses` courses, there is no directed cycle, so return True.
+        Otherwise, a cycle exists, so return False.
+
+        Time Complexity: O(V + E) where V = numCourses, E = len(prerequisites).
+        Space Complexity: O(V + E) for the adjacency list and queue.
+        """
+        adj: List[List[int]] = [[] for _ in range(numCourses)]
+        in_degrees: List[int] = [0] * numCourses
+
+        for course, prereq in prerequisites:
+            adj[prereq].append(course)
+            in_degrees[course] += 1
+
+        queue = deque([i for i in range(numCourses) if in_degrees[i] == 0])
+        processed_courses = 0
+
+        while queue:
+            node = queue.popleft()
+            processed_courses += 1
+
+            for neighbor in adj[node]:
+                in_degrees[neighbor] -= 1
+                if in_degrees[neighbor] == 0:
+                    queue.append(neighbor)
+
+        return processed_courses == numCourses
 
 
 if __name__ == "__main__":
