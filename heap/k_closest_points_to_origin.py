@@ -1,3 +1,4 @@
+import heapq
 from typing import List
 
 
@@ -30,8 +31,33 @@ class Solution:
         Constraints:
             - 1 <= k <= points.length <= 10^4
             - -10^4 <= xi, yi <= 10^4
+
+        Approach:
+        - We maintain a Max-Heap of size k storing (-squared_distance, point).
+        - Squared Euclidean distance (x^2 + y^2) is used directly to avoid costly and imprecise square roots.
+        - Since Python's heapq is a min-heap, storing negative distances simulates a max-heap where the
+          farthest point among our current k closest candidates is always at the root.
+        - For each point:
+            - If heap size is less than k: push (-dist, point).
+            - Else if -dist > max_heap[0][0] (meaning current point is closer than the farthest in the heap):
+              replace the root using heapq.heapreplace.
+        - Finally, extract and return all points from the heap.
+
+        Complexity:
+        - Time: O(n log k), where n is the number of points.
+        - Space: O(k) auxiliary space to store k elements in the heap.
         """
-        pass
+        # max_heap stores (-dist_sq, point)
+        max_heap = []
+
+        for point in points:
+            dist_sq = point[0] ** 2 + point[1] ** 2
+            if len(max_heap) < k:
+                heapq.heappush(max_heap, (-dist_sq, point))
+            elif -dist_sq > max_heap[0][0]:
+                heapq.heapreplace(max_heap, (-dist_sq, point))
+
+        return [point for _, point in max_heap]
 
 
 if __name__ == "__main__":

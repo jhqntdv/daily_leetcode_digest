@@ -1,4 +1,7 @@
+import heapq
+from collections import Counter
 from typing import List
+
 
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
@@ -13,8 +16,30 @@ class Solution:
         - It is guaranteed that the answer is unique.
 
         Follow up: Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
+
+        Approach (Min-Heap of size k):
+        1. Count frequencies using collections.Counter in O(n) time.
+        2. Maintain a min-heap of size k storing tuples of (freq, num).
+           - Storing (freq, num) orders elements primarily by frequency.
+           - When heap size exceeds k, pop the smallest frequency element.
+        3. The heap retains the k most frequent elements.
+
+        Complexity:
+        - Time: O(n log k), where n is len(nums) and k is the number of top elements.
+          (Alternatively, Bucket Sort achieves O(n) time and O(n) space).
+        - Space: O(n + k) to store frequency map and heap of size k.
         """
-        pass
+        counts = Counter(nums)
+        # Bounded min-heap of size k: (frequency, num)
+        min_heap = []
+        for num, freq in counts.items():
+            if len(min_heap) < k:
+                heapq.heappush(min_heap, (freq, num))
+            elif freq > min_heap[0][0]:
+                heapq.heapreplace(min_heap, (freq, num))
+
+        return [num for _, num in min_heap]
+
 
 if __name__ == '__main__':
     sol = Solution()

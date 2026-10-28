@@ -24,12 +24,37 @@ Constraints:
 - -10^4 <= nums[i] <= 10^4
 """
 
+import heapq
 from typing import List
+
 
 class Solution:
     def findKthLargest(self, nums: List[int], k: int) -> int:
-        # Write your code here
-        pass
+        """
+        Finds the kth largest element in an array using a Min-Heap of size k.
+
+        Approach:
+        - Maintain a min-heap containing the k largest elements seen so far.
+        - The smallest element among these top k elements sits at the root (min_heap[0]),
+          which corresponds exactly to the kth largest element overall.
+        - For each number in nums:
+            - If heap size is less than k, push num directly into the heap.
+            - If num is larger than min_heap[0], replace the root with num via heapreplace.
+              (heapreplace pops the min and pushes num in a single O(log k) sift-down pass).
+        
+        Complexity:
+        - Time: O(n log k), where n is len(nums). Significantly faster than O(n log n) sorting when k << n.
+        - Space: O(k) auxiliary space for the heap of size k.
+        """
+        min_heap: List[int] = []
+        for num in nums:
+            if len(min_heap) < k:
+                heapq.heappush(min_heap, num)
+            elif num > min_heap[0]:
+                heapq.heapreplace(min_heap, num)
+        
+        return min_heap[0]
+
 
 if __name__ == '__main__':
     sol = Solution()
