@@ -1,10 +1,12 @@
 from typing import Optional
 
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
+
 
 class Solution:
     def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
@@ -32,9 +34,37 @@ class Solution:
         Constraints:
         - The number of nodes in the tree is in the range [1, 10^4].
         - -100 <= Node.val <= 100
+
+        Approach (Bottom-Up Post-Order DFS):
+        - At every node, the longest path that uses this node as its highest "turning point"
+          has length `left_height + right_height` (where height of an empty subtree is 0).
+        - Use a post-order DFS helper that:
+            1. Computes `left_height` and `right_height`.
+            2. Updates `max_diameter = max(max_diameter, left_height + right_height)`.
+            3. Returns `1 + max(left_height, right_height)` as the subtree height to its parent.
+
+        Complexity:
+        - Time: O(n), visiting each node exactly once.
+        - Space: O(h) recursion stack, where h is the height of the tree (O(log n) balanced, O(n) skewed).
         """
-        # TODO: Implement your solution here
-        pass
+        max_diameter = 0
+
+        def height(node: Optional[TreeNode]) -> int:
+            nonlocal max_diameter
+            if not node:
+                return 0
+
+            left_h = height(node.left)
+            right_h = height(node.right)
+
+            # Longest path through current node as highest ancestor
+            max_diameter = max(max_diameter, left_h + right_h)
+
+            return 1 + max(left_h, right_h)
+
+        height(root)
+        return max_diameter
+
 
 if __name__ == '__main__':
     sol = Solution()

@@ -1,11 +1,13 @@
 from typing import Optional, List
 
+
 # Definition for a binary tree node.
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
+
 
 class Solution:
     """
@@ -32,8 +34,19 @@ class Solution:
         - -100 <= Node.val <= 100
     """
     def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
-        # TODO: Implement your solution here
-        pass
+        """
+        Recursively swaps the left and right subtrees of every node in the tree.
+
+        Complexity:
+        - Time: O(n), where n is the number of nodes in the tree.
+        - Space: O(h) recursion stack, where h is the height of the tree.
+        """
+        if not root:
+            return None
+
+        root.left, root.right = self.invertTree(root.right), self.invertTree(root.left)
+        return root
+
 
 # --- Helper functions for testing ---
 def build_tree(arr: List[Optional[int]]) -> Optional[TreeNode]:
@@ -47,6 +60,7 @@ def build_tree(arr: List[Optional[int]]) -> Optional[TreeNode]:
             if kids: node.left = kids.pop()
             if kids: node.right = kids.pop()
     return root
+
 
 def tree_to_list(root: Optional[TreeNode]) -> List[Optional[int]]:
     if not root:
@@ -64,6 +78,7 @@ def tree_to_list(root: Optional[TreeNode]) -> List[Optional[int]]:
     while res and res[-1] is None:
         res.pop()
     return res
+
 
 if __name__ == '__main__':
     sol = Solution()

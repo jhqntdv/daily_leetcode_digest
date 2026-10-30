@@ -33,8 +33,45 @@ Constraints:
 
 
 def search(nums: list[int], target: int) -> int:
-    # Write your solution here
-    pass
+    """
+    Finds the index of target in a rotated sorted array in O(log n) time.
+
+    Approach (Half-Sorted Invariant):
+    - When splitting a rotated sorted array at `mid`, at least one of the two halves
+      ([left..mid] or [mid..right]) is guaranteed to be strictly sorted.
+    - Check if nums[mid] == target.
+    - If nums[left] <= nums[mid], the left half [left..mid] is sorted:
+        - Check if target falls within [nums[left], nums[mid]):
+          if so, search left (right = mid - 1); otherwise search right (left = mid + 1).
+    - Otherwise, the right half [mid..right] is sorted:
+        - Check if target falls within (nums[mid], nums[right]]:
+          if so, search right (left = mid + 1); otherwise search left (right = mid - 1).
+
+    Complexity:
+    - Time: O(log n)
+    - Space: O(1)
+    """
+    left, right = 0, len(nums) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+
+        # Left half [left..mid] is sorted
+        if nums[left] <= nums[mid]:
+            if nums[left] <= target < nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        # Right half [mid..right] is sorted
+        else:
+            if nums[mid] < target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+    return -1
 
 
 if __name__ == "__main__":

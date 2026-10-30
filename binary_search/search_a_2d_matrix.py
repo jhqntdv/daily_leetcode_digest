@@ -1,5 +1,6 @@
 from typing import List
 
+
 class Solution:
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
         """
@@ -13,9 +14,39 @@ class Solution:
         - n == matrix[i].length
         - 1 <= m, n <= 100
         - -10^4 <= matrix[i][j], target <= 10^4
+
+        Approach (Virtual 1D Array Binary Search):
+        - Because each row is sorted and the first element of row i is greater than the last
+          element of row i-1, the entire m x n matrix is equivalent to a strictly sorted 1D
+          array of length m * n.
+        - A 1D index `idx` in [0, m * n - 1] maps to 2D coordinates:
+            row = idx // n
+            col = idx % n
+        - Run standard binary search over [0, m * n - 1].
+
+        Complexity:
+        - Time: O(log(m * n)) = O(log m + log n)
+        - Space: O(1)
         """
-        # Write your solution here
-        pass
+        if not matrix or not matrix[0]:
+            return False
+
+        m, n = len(matrix), len(matrix[0])
+        left, right = 0, m * n - 1
+
+        while left <= right:
+            mid = (left + right) // 2
+            val = matrix[mid // n][mid % n]
+
+            if val == target:
+                return True
+            elif val < target:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        return False
+
 
 if __name__ == '__main__':
     sol = Solution()

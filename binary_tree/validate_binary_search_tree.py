@@ -35,8 +35,26 @@ class Solution:
         Constraints:
             - The number of nodes in the tree is in the range [1, 10^4].
             - -2^31 <= Node.val <= 2^31 - 1
+
+        Approach (Top-Down Range Propagation DFS):
+        - Every node in a BST must lie within a valid open interval `(low, high)` inherited from its ancestors:
+            - The root starts with `(-inf, +inf)`.
+            - Moving to `node.left` tightens the upper bound to `(low, node.val)`.
+            - Moving to `node.right` tightens the lower bound to `(node.val, high)`.
+        - If any node violates `low < node.val < high`, return False immediately.
+
+        Complexity:
+        - Time: O(n), visiting each node at most once.
+        - Space: O(h) recursion stack, where h is the height of the tree.
         """
-        pass
+        def validate(node: Optional[TreeNode], low: float, high: float) -> bool:
+            if not node:
+                return True
+            if not (low < node.val < high):
+                return False
+            return validate(node.left, low, node.val) and validate(node.right, node.val, high)
+
+        return validate(root, float("-inf"), float("inf"))
 
 
 if __name__ == '__main__':

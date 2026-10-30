@@ -1,5 +1,6 @@
 import math
 
+
 class Solution:
     def minEatingSpeed(self, piles: list[int], h: int) -> int:
         """
@@ -16,9 +17,33 @@ class Solution:
         - 1 <= piles.length <= 10^4
         - piles.length <= h <= 10^9
         - 1 <= piles[i] <= 10^9
+
+        Approach (Binary Search on Answer Space):
+        - The eating speed k lies in the range [1, max(piles)].
+        - Monotonicity: If Koko can finish all piles within h hours at speed k, she can also
+          finish within h hours at any speed > k.
+        - For a candidate speed mid, total hours required is sum(ceil(p / mid) for p in piles),
+          computed via integer arithmetic as (p + mid - 1) // mid.
+        - If hours <= h, mid is feasible -> search lower speeds: right = mid.
+        - Otherwise, mid is too slow -> search higher speeds: left = mid + 1.
+
+        Complexity:
+        - Time: O(n log(max(piles))), where n is len(piles).
+        - Space: O(1)
         """
-        # Write your code here
-        pass
+        left, right = 1, max(piles)
+
+        while left < right:
+            mid = (left + right) // 2
+            hours_needed = sum((pile + mid - 1) // mid for pile in piles)
+
+            if hours_needed <= h:
+                right = mid
+            else:
+                left = mid + 1
+
+        return left
+
 
 if __name__ == '__main__':
     solution = Solution()

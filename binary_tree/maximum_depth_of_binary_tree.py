@@ -1,10 +1,12 @@
 from typing import Optional
 
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
+
 
 class Solution:
     """
@@ -33,8 +35,20 @@ class Solution:
         - -100 <= Node.val <= 100
     """
     def maxDepth(self, root: Optional[TreeNode]) -> int:
-        # Write your solution here
-        pass
+        """
+        Bottom-Up Post-Order DFS.
+
+        Approach:
+        - The maximum depth of an empty tree is 0.
+        - For any non-empty node, its maximum depth is 1 + max(maxDepth(left), maxDepth(right)).
+
+        Complexity:
+        - Time: O(n), visiting every node once.
+        - Space: O(h) recursion stack, where h is the height of the tree.
+        """
+        if not root:
+            return 0
+        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
 
 
 def build_tree(nodes: list) -> Optional[TreeNode]:

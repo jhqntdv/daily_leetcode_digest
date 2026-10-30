@@ -39,8 +39,31 @@ class TreeNode:
 
 class Solution:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-        # Write your solution here
-        pass
+        """
+        Iterative BST Split-Point Search.
+
+        Approach:
+        - Leverage the BST invariant (left < node < right):
+            - If both p.val and q.val are strictly smaller than curr.val, the LCA must
+              reside in the left subtree -> move to curr.left.
+            - If both p.val and q.val are strictly greater than curr.val, the LCA must
+              reside in the right subtree -> move to curr.right.
+            - Otherwise, p and q split across curr (or one of them equals curr),
+              making curr the Lowest Common Ancestor.
+
+        Complexity:
+        - Time: O(h), where h is the height of the BST (O(log n) balanced, O(n) skewed).
+        - Space: O(1) using an iterative pointer.
+        """
+        curr = root
+        while curr:
+            if p.val < curr.val and q.val < curr.val:
+                curr = curr.left
+            elif p.val > curr.val and q.val > curr.val:
+                curr = curr.right
+            else:
+                return curr
+        return root
 
 
 def find_node(root: TreeNode, val: int) -> TreeNode:

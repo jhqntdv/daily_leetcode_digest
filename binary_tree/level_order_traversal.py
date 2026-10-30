@@ -1,12 +1,14 @@
 from typing import List, Optional
 from collections import deque
 
+
 # Definition for a binary tree node.
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
+
 
 class Solution:
     """
@@ -30,7 +32,38 @@ class Solution:
         - -1000 <= Node.val <= 1000
     """
     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        pass
+        """
+        Breadth-First Search (BFS) using a FIFO queue.
+
+        Approach:
+        - Initialize a deque with `root`.
+        - In each iteration of the outer loop, `len(queue)` equals the exact number of
+          nodes at the current depth level.
+        - Pop those nodes, collect their values into `level_vals`, and enqueue their
+          non-null left and right children for the next level.
+
+        Complexity:
+        - Time: O(n), visiting every node once.
+        - Space: O(n) for the output list and O(w) <= O(n) for the BFS queue.
+        """
+        if not root:
+            return []
+
+        result: List[List[int]] = []
+        queue = deque([root])
+
+        while queue:
+            level_vals: List[int] = []
+            for _ in range(len(queue)):
+                node = queue.popleft()
+                level_vals.append(node.val)
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
+            result.append(level_vals)
+
+        return result
 
 
 if __name__ == '__main__':
