@@ -11,9 +11,28 @@ class Solution:
         Constraints:
         - 1 <= prices.length <= 10^5
         - 0 <= prices[i] <= 10^4
+
+        Approach (Single-Pass Running Minimum):
+        - Track the lowest stock price seen so far (`min_price`) as we iterate through the days.
+        - On each day, either:
+            1. Update `min_price` if today's price is lower than any previous day.
+            2. Or check if selling today (`price - min_price`) yields a higher `max_profit`.
+
+        Complexity:
+        - Time: O(n), single pass through `prices`.
+        - Space: O(1) auxiliary space.
         """
-        # Write your code here
-        return 0
+        min_price = float("inf")
+        max_profit = 0
+
+        for price in prices:
+            if price < min_price:
+                min_price = price
+            elif price - min_price > max_profit:
+                max_profit = price - min_price
+
+        return max_profit
+
 
 if __name__ == '__main__':
     sol = Solution()

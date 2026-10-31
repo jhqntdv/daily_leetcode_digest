@@ -1,5 +1,6 @@
 from typing import List
 
+
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
         """
@@ -17,9 +18,35 @@ class Solution:
         
         Follow up: Can you solve the problem in O(1) extra space complexity? 
         (The output array does not count as extra space for space complexity analysis.)
+
+        Approach (Two-Pass Prefix & Suffix Products in O(1) Extra Space):
+        - For each index `i`, `answer[i]` is the product of all elements to the left of `i`
+          multiplied by the product of all elements to the right of `i`.
+        - Pass 1 (Left-to-Right): Store the running prefix product of `nums[0..i-1]` in `answer[i]`.
+        - Pass 2 (Right-to-Left): Maintain a running scalar `suffix` product of `nums[i+1..n-1]`
+          and multiply it directly into `answer[i]`.
+
+        Complexity:
+        - Time: O(n), two linear passes over the array.
+        - Space: O(1) extra space (excluding the output array `answer`).
         """
-        # Write your code here
-        pass
+        n = len(nums)
+        answer = [1] * n
+
+        # Pass 1: Prefix products (left to right)
+        prefix = 1
+        for i in range(n):
+            answer[i] = prefix
+            prefix *= nums[i]
+
+        # Pass 2: Suffix products (right to left)
+        suffix = 1
+        for i in range(n - 1, -1, -1):
+            answer[i] *= suffix
+            suffix *= nums[i]
+
+        return answer
+
 
 if __name__ == '__main__':
     sol = Solution()
