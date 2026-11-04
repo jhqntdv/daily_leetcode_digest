@@ -3,6 +3,7 @@ class ListNode:
         self.val = val
         self.next = next
 
+
 class Solution:
     def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
         """
@@ -14,9 +15,37 @@ class Solution:
         - The number of nodes in each linked list is in the range [1, 100].
         - 0 <= Node.val <= 9
         - It is guaranteed that the list represents a number that does not have leading zeros.
+
+        Approach (Dummy Head + Carry Propagation):
+        - Traverse both lists simultaneously while `l1`, `l2`, or `carry` is non-zero.
+        - At each step:
+            - Extract `v1 = l1.val if l1 else 0` and `v2 = l2.val if l2 else 0`.
+            - Compute `carry, digit = divmod(v1 + v2 + carry, 10)`.
+            - Append `ListNode(digit)` to the result list and advance pointers.
+
+        Complexity:
+        - Time: O(max(m, n)), where m and n are the lengths of l1 and l2.
+        - Space: O(max(m, n)) for the newly created result linked list (O(1) auxiliary).
         """
-        # Write your solution here
-        pass
+        dummy = ListNode(0)
+        curr = dummy
+        carry = 0
+
+        while l1 or l2 or carry:
+            v1 = l1.val if l1 else 0
+            v2 = l2.val if l2 else 0
+
+            carry, digit = divmod(v1 + v2 + carry, 10)
+            curr.next = ListNode(digit)
+            curr = curr.next
+
+            if l1:
+                l1 = l1.next
+            if l2:
+                l2 = l2.next
+
+        return dummy.next
+
 
 def build_linked_list(arr):
     dummy = ListNode(0)
@@ -26,6 +55,7 @@ def build_linked_list(arr):
         curr = curr.next
     return dummy.next
 
+
 def linked_list_to_list(head):
     res = []
     curr = head
@@ -33,6 +63,7 @@ def linked_list_to_list(head):
         res.append(curr.val)
         curr = curr.next
     return res
+
 
 if __name__ == '__main__':
     solution = Solution()

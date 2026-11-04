@@ -39,8 +39,33 @@ class ListNode:
 
 class Solution:
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        # TODO: Implement your solution here
-        pass
+        """
+        One-Pass Two Pointers with Dummy Node.
+
+        Approach:
+        - Place a `dummy` node before `head` to cleanly handle removing the first node.
+        - Initialize `slow = dummy` and `fast = dummy`.
+        - Advance `fast` by `n + 1` steps so that the gap between `slow` and `fast` is `n + 1`.
+        - Move both `slow` and `fast` together until `fast` reaches `None`.
+        - `slow` now points to the node immediately preceding the target node:
+          set `slow.next = slow.next.next`.
+
+        Complexity:
+        - Time: O(L), single pass where L is the length of the linked list.
+        - Space: O(1)
+        """
+        dummy = ListNode(0, head)
+        slow = fast = dummy
+
+        for _ in range(n + 1):
+            fast = fast.next
+
+        while fast:
+            slow = slow.next
+            fast = fast.next
+
+        slow.next = slow.next.next
+        return dummy.next
 
 
 def build_linked_list(values: List[int]) -> Optional[ListNode]:

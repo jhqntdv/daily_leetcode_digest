@@ -33,8 +33,39 @@ from typing import List
 
 
 def eraseOverlapIntervals(intervals: List[List[int]]) -> int:
-    # Write your solution here
-    pass
+    """
+    Greedy Interval Scheduling (Sort by End Time).
+
+    Approach:
+    - Minimizing the number of removed intervals is equivalent to maximizing the number
+      of non-overlapping intervals we keep.
+    - Sort intervals by their **end time** (`key=lambda x: x[1]`).
+    - Greedily keep the interval that finishes earliest to leave the maximum possible
+      room for future intervals:
+        - Track `prev_end` of the last kept interval.
+        - For each `[start, end]`:
+            - If `start < prev_end`, there is an overlap -> increment `removed` count
+              (we discard the current interval because its `end >= prev_end`).
+            - Otherwise (`start >= prev_end`), keep it and update `prev_end = end`.
+
+    Complexity:
+    - Time: O(n log n) due to sorting.
+    - Space: O(1) auxiliary space (or O(n) for Timsort).
+    """
+    if not intervals:
+        return 0
+
+    intervals.sort(key=lambda x: x[1])
+    removed = 0
+    prev_end = intervals[0][1]
+
+    for start, end in intervals[1:]:
+        if start < prev_end:
+            removed += 1
+        else:
+            prev_end = end
+
+    return removed
 
 
 if __name__ == '__main__':

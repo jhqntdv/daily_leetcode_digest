@@ -42,9 +42,41 @@ class Solution:
     def reorderList(self, head: Optional[ListNode]) -> None:
         """
         Do not return anything, modify head in-place instead.
+
+        Three-Step In-Place Algorithm:
+        1. Find the middle of the list using slow & fast pointers (`slow` stops at the end of the first half).
+        2. Reverse the second half of the list (`slow.next` onward) in-place and sever the link (`slow.next = None`).
+        3. Interleave (zip) the first half (`first = head`) and the reversed second half (`second = prev`).
+
+        Complexity:
+        - Time: O(n)
+        - Space: O(1)
         """
-        # TODO: Implement your solution here
-        pass
+        if not head or not head.next:
+            return
+
+        # Step 1: Find middle
+        slow, fast = head, head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        # Step 2: Reverse the second half
+        prev, curr = None, slow.next
+        slow.next = None  # Split into two independent lists
+        while curr:
+            nxt = curr.next
+            curr.next = prev
+            prev = curr
+            curr = nxt
+
+        # Step 3: Interleave first half and reversed second half
+        first, second = head, prev
+        while second:
+            tmp1, tmp2 = first.next, second.next
+            first.next = second
+            second.next = tmp1
+            first, second = tmp1, tmp2
 
 
 def list_to_linked_list(arr: List[int]) -> Optional[ListNode]:

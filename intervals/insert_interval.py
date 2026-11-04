@@ -35,9 +35,48 @@ Constraints:
 - 0 <= start <= end <= 10^5
 """
 
+
 class Solution:
     def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
-        pass
+        """
+        Three-Phase Linear Scan.
+
+        Approach:
+        Since `intervals` is already sorted by start time:
+        1. Add all intervals that end strictly before `newInterval` starts (`intervals[i][1] < new_start`).
+        2. Merge all overlapping intervals (`intervals[i][0] <= new_end`) into `newInterval` by updating:
+           `new_start = min(new_start, intervals[i][0])`
+           `new_end = max(new_end, intervals[i][1])`
+           Then append the merged `[new_start, new_end]`.
+        3. Append all remaining intervals that start strictly after `new_end`.
+
+        Complexity:
+        - Time: O(n), single pass through `intervals`.
+        - Space: O(n) for the output list (O(1) auxiliary space).
+        """
+        result: List[List[int]] = []
+        i = 0
+        n = len(intervals)
+        new_start, new_end = newInterval[0], newInterval[1]
+
+        # Phase 1: Intervals completely before newInterval
+        while i < n and intervals[i][1] < new_start:
+            result.append(intervals[i])
+            i += 1
+
+        # Phase 2: Overlapping intervals -> merge into [new_start, new_end]
+        while i < n and intervals[i][0] <= new_end:
+            new_start = min(new_start, intervals[i][0])
+            new_end = max(new_end, intervals[i][1])
+            i += 1
+        result.append([new_start, new_end])
+
+        # Phase 3: Intervals completely after newInterval
+        while i < n:
+            result.append(intervals[i])
+            i += 1
+
+        return result
 
 
 if __name__ == "__main__":

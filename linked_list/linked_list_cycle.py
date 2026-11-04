@@ -3,6 +3,7 @@ class ListNode:
         self.val = x
         self.next = None
 
+
 class Solution:
     def hasCycle(self, head: ListNode) -> bool:
         """
@@ -18,9 +19,24 @@ class Solution:
         - The number of nodes in the list is in the range [0, 10^4].
         - -10^5 <= Node.val <= 10^5
         - pos is -1 or a valid index in the linked-list.
+
+        Approach (Floyd's Tortoise and Hare Cycle Detection):
+        - Use two pointers: `slow` advances 1 node per step, `fast` advances 2 nodes per step.
+        - If there is no cycle, `fast` or `fast.next` will reach `None` -> return False.
+        - If there is a cycle, `fast` will eventually lap `slow` inside the cycle (`slow == fast`) -> return True.
+
+        Complexity:
+        - Time: O(n)
+        - Space: O(1)
         """
-        # Write your solution here
-        pass
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow is fast:
+                return True
+        return False
+
 
 if __name__ == '__main__':
     # Test Case 1: Cycle exists (3 -> 2 -> 0 -> -4 -> back to 2)

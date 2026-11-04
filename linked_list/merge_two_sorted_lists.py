@@ -29,16 +29,46 @@ Constraints:
 
 from typing import Optional, List
 
+
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, val: int = 0, next: Optional['ListNode'] = None):
         self.val = val
         self.next = next
 
+
 class Solution:
     def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
-        # Write your code here
-        pass
+        """
+        Iterative Two-Pointer Splice with Dummy Head.
+
+        Approach:
+        - Create a `dummy` sentinel node and a tail pointer `curr = dummy`.
+        - While both `list1` and `list2` are non-empty:
+            - Attach the node with the smaller value to `curr.next` and advance that list's pointer.
+            - Advance `curr`.
+        - Attach the remaining non-empty list (`list1 or list2`) directly to `curr.next`.
+        - Return `dummy.next`.
+
+        Complexity:
+        - Time: O(m + n), where m and n are the lengths of the two lists.
+        - Space: O(1) extra space (splices existing nodes in-place).
+        """
+        dummy = ListNode(0)
+        curr = dummy
+
+        while list1 and list2:
+            if list1.val <= list2.val:
+                curr.next = list1
+                list1 = list1.next
+            else:
+                curr.next = list2
+                list2 = list2.next
+            curr = curr.next
+
+        curr.next = list1 if list1 else list2
+        return dummy.next
+
 
 # Helper functions for testing
 def build_linked_list(arr: List[int]) -> Optional[ListNode]:
@@ -49,6 +79,7 @@ def build_linked_list(arr: List[int]) -> Optional[ListNode]:
         curr = curr.next
     return dummy.next
 
+
 def linked_list_to_list(head: Optional[ListNode]) -> List[int]:
     result = []
     curr = head
@@ -56,6 +87,7 @@ def linked_list_to_list(head: Optional[ListNode]) -> List[int]:
         result.append(curr.val)
         curr = curr.next
     return result
+
 
 if __name__ == '__main__':
     solution = Solution()

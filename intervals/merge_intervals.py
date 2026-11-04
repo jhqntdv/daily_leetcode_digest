@@ -31,7 +31,34 @@ from typing import List
 
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
-        pass
+        """
+        Sort by Start Time + Linear Merge.
+
+        Approach:
+        1. Sort `intervals` in ascending order by `start_i` (`key=lambda x: x[0]`).
+        2. Initialize `merged` with the first interval.
+        3. For each subsequent `[start, end]`:
+           - If `start <= merged[-1][1]` (overlaps with the previous interval):
+             extend the previous interval's end: `merged[-1][1] = max(merged[-1][1], end)`.
+           - Otherwise, append `[start, end]` as a new disjoint interval.
+
+        Complexity:
+        - Time: O(n log n) due to sorting.
+        - Space: O(n) to store the merged output.
+        """
+        if not intervals:
+            return []
+
+        intervals.sort(key=lambda x: x[0])
+        merged: List[List[int]] = [intervals[0]]
+
+        for start, end in intervals[1:]:
+            if start <= merged[-1][1]:
+                merged[-1][1] = max(merged[-1][1], end)
+            else:
+                merged.append([start, end])
+
+        return merged
 
 
 if __name__ == "__main__":
